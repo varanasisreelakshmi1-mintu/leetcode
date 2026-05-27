@@ -1,0 +1,51 @@
+class Solution(object):
+    def solveNQueens(self, n):
+        res = []
+        board = [["."] * n for i in range(n) ]
+
+
+        def is_safe(r,c,board):
+            #up
+
+            for row in range(r-1 , -1 , -1):
+                if board[row][c] == "Q":
+                    return False
+            
+
+            # upper l d
+            row , col  = r-1 , c-1
+            while row>-1 and col >-1:
+                if board[row][col] == "Q":
+                    return False
+                row -= 1
+                col -= 1
+
+
+
+            # upper r d
+            row , col  = r-1 , c+1
+            while row>-1 and col < n:
+                if board[row][col] == "Q":
+                    return False
+                row -= 1
+                col += 1
+            
+            return True
+
+
+
+        def backtrack(r , n , board):
+            if r == n:
+                res.append( ["".join(row) for row in  board] )
+                return
+
+
+            for c in range(n):
+                if is_safe(r,c,board):
+                    board[r][c] = "Q"
+                    backtrack(r+1 , n , board)
+                    board[r][c] = "."
+
+
+        backtrack(0,n,board)
+        return res

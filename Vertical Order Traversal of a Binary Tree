@@ -1,0 +1,34 @@
+from collections import defaultdict, deque
+from typing import Optional, List
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def verticalTraversal(self, root: Optional[TreeNode]) -> List[List[int]]:
+        if not root:
+            return []
+
+        d = defaultdict(lambda: defaultdict(list))
+        q = deque([(0, 0, root)])  # (level, vertical, node)
+
+        while q:
+            level, vertical, node = q.popleft()
+            d[vertical][level].append(node.val)
+
+            if node.left:
+                q.append((level + 1, vertical - 1, node.left))
+            if node.right:
+                q.append((level + 1, vertical + 1, node.right))
+
+        ans = []
+        for v in sorted(d):                # sort by vertical
+            temp = []
+            for lvl in sorted(d[v]):       # sort by level
+                temp.extend(sorted(d[v][lvl]))  # sort values if same position
+            ans.append(temp)
+
+        return ans
